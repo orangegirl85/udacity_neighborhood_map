@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Neighborhood Map</title>
+</head>
+<body>
+<ul id="locations-list"></ul>
+<div id="location">
+    <ul data-bind="foreach: locationsList">
+        <li data-bind="text: name, click: $parent.setLocation"></li>
+    </ul>
+    <div data-bind="with:currentLocation">
+        <h2 id="location-name" data-bind="text: name"></h2>
+        <div id="location-address" data-bind="text: address"></div>
+    </div>
+
+</div>
+<script src="js/lib/knockout-3.2.0.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
