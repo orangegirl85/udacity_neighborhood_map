@@ -22,6 +22,18 @@ var initialLocations = [
         }
     ];
 
+function initMap() {
+    var myPlace = {lat: 45.7674959, lng: 21.2171965};
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: myPlace
+    });
+    var marker = new google.maps.Marker({
+        position: myPlace,
+        map: map
+    });
+}
+
 var Location = function(data) {
     this.name = ko.observable(data.name);
     this.address = ko.observable(data.address);
