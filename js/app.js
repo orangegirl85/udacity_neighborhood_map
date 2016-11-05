@@ -22,25 +22,21 @@ var initialLocations = [
         }
     ];
 
-function initMap() {
+
+function initMap(locationList) {
     var myPlace = {lat: 45.7674959, lng: 21.2171965};
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: myPlace
     });
-    var marker = new google.maps.Marker({
-        position: myPlace,
-        map: map
-    });
-
 
     var geocoder = new google.maps.Geocoder();
 
-    function codeAddress(address) {
+    function codeAddress(location) {
 
-        geocoder.geocode( { 'address' : address }, function( results, status ) {
+        geocoder.geocode( { 'address' : location.address() }, function( results, status ) {
             if( status == google.maps.GeocoderStatus.OK ) {
-                var marker = new google.maps.Marker( {
+                location.marker = new google.maps.Marker( {
                     position: results[0].geometry.location,
                     map     : map
                 } );
@@ -49,8 +45,8 @@ function initMap() {
             }
         } );
     }
-    initialLocations.forEach(function(locationItem){
-        codeAddress(locationItem.address);
+    locationList().forEach(function(locationItem){
+        codeAddress(locationItem);
     });
 }
 
@@ -71,7 +67,41 @@ var ViewModel = function() {
     
     this.setLocation = function(clickedLocation) {
         self.currentLocation(clickedLocation);
-    }
+    };
+
+    initMap(this.locationsList);
+
+
+    this.filter = ko.observable("");
+
+    var stringStartsWith = function (string, startsWith) {
+        string = string || "";
+        if (startsWith.length > string.length)
+            return false;
+        return string.substring(0, startsWith.length) === startsWith;
+    };
+
+    this.filteredItems = ko.dependentObservable(function() {
+        var filter = self.filter().toLowerCase();
+        if (!filter) {
+            self.locationsList().forEach(function (item) {
+                if ( item.marker ) {
+                    item.marker.setVisible(true);
+                }
+            });
+            return self.locationsList();
+        } else {
+            return ko.utils.arrayFilter(self.locationsList(), function(item) {
+                if (stringStartsWith(item.name().toLowerCase(), filter)) {
+                    item.marker.setVisible(true);
+                    return true;
+                } else {
+                    item.marker.setVisible(false);
+                    return false;
+                }
+            });
+        }
+    });
 };
 
 ko.applyBindings(new ViewModel());
