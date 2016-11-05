@@ -17,12 +17,8 @@
 <ul id="locations-list"></ul>
 <div id="location">
     <ul data-bind="foreach: filteredItems">
-        <li data-bind="text: name, click: $parent.setLocation"></li>
+        <li data-bind="text: name, click: $parent.openInfoWindow"></li>
     </ul>
-    <div data-bind="with:currentLocation">
-        <h2 id="location-name" data-bind="text: name"></h2>
-        <div id="location-address" data-bind="text: address"></div>
-    </div>
     <div id="map"></div>
 
 </div>

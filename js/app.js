@@ -22,13 +22,15 @@ var initialLocations = [
         }
     ];
 
+var map;
 
 function initMap(locationList) {
     var myPlace = {lat: 45.7674959, lng: 21.2171965};
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: myPlace
     });
+
 
     var geocoder = new google.maps.Geocoder();
 
@@ -40,6 +42,9 @@ function initMap(locationList) {
                     position: results[0].geometry.location,
                     map     : map
                 } );
+
+                addInfoWindow(location, map);
+
             } else {
                 alert( 'Geocode was not successful for the following reason: ' + status );
             }
@@ -48,6 +53,33 @@ function initMap(locationList) {
     locationList().forEach(function(locationItem){
         codeAddress(locationItem);
     });
+}
+
+
+function addInfoWindow(location, map) {
+    var infowindow = _setInfoWindow(location);
+    location.marker.addListener('click', function() {
+        infowindow.open(map, location.marker);
+    });
+}
+
+function addInfoWindow1(location, map) {
+    var infowindow = _setInfoWindow(location);
+    infowindow.open(map, location.marker);
+
+}
+
+function _setInfoWindow(location) {
+    var contentString = '<div class="content-marker">'+
+        '<h1>'+ location.name() +'</h1>'+
+        '<p>'+ location.address() +'</p>'+
+        '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString
+    });
+
+    return infowindow;
 }
 
 var Location = function(data) {
@@ -63,10 +95,8 @@ var ViewModel = function() {
     initialLocations.forEach(function(locationItem){
         self.locationsList.push(new Location(locationItem));
     });
-    this.currentLocation = ko.observable(this.locationsList()[0]);
-    
-    this.setLocation = function(clickedLocation) {
-        self.currentLocation(clickedLocation);
+    this.openInfoWindow = function(clickedLocation) {
+        addInfoWindow1(clickedLocation, map);
     };
 
     initMap(this.locationsList);
