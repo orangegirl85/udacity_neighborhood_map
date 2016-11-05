@@ -40,7 +40,8 @@ function initMap(locationList) {
             if( status == google.maps.GeocoderStatus.OK ) {
                 location.marker = new google.maps.Marker( {
                     position: results[0].geometry.location,
-                    map     : map
+                    map     : map,
+                    animation: google.maps.Animation.DROP
                 } );
 
                 addInfoWindow(location, map);
@@ -60,13 +61,20 @@ function addInfoWindow(location, map) {
     var infowindow = _setInfoWindow(location);
     location.marker.addListener('click', function() {
         infowindow.open(map, location.marker);
+        bounceOnce(location.marker);
     });
 }
 
 function addInfoWindow1(location, map) {
     var infowindow = _setInfoWindow(location);
     infowindow.open(map, location.marker);
+    bounceOnce(location.marker);
 
+}
+
+function bounceOnce(marker){
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function(){ marker.setAnimation(null); }, 750);
 }
 
 function _setInfoWindow(location) {

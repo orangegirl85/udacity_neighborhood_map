@@ -22,13 +22,19 @@
 
 2. https://developers.google.com/maps/documentation/javascript/adding-a-google-map
 
-3. http://stackoverflow.com/questions/3926836/using-google-maps-api-v3-how-do-i-get-latlng-with-a-given-address
+3. https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
 
-4. http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+4. https://developers.google.com/maps/documentation/javascript/examples/marker-animations
 
-5. http://stackoverflow.com/questions/28042344/filter-using-knockoutjs (stringStartsWith)
+5. http://stackoverflow.com/questions/3926836/using-google-maps-api-v3-how-do-i-get-latlng-with-a-given-address
 
-6. https://discussions.udacity.com/t/cant-get-to-filter-markers/195121/2
+6. http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+
+7. http://stackoverflow.com/questions/28042344/filter-using-knockoutjs (stringStartsWith)
+
+8. https://discussions.udacity.com/t/cant-get-to-filter-markers/195121/2
+
+9. http://stackoverflow.com/questions/7339200/bounce-a-pin-in-google-maps-once
 
 
 # Extras
