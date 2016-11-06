@@ -3,7 +3,7 @@
 
     * This is a single page application featuring a map of my neighborhood with locations I would like to visit.
 
-    * Used technologies: Vanilla Javascript and Knockout.js, Google Maps API
+    * Used technologies: Vanilla Javascript and Knockout.js, Google Maps API, Bootstrap
 
 
 
@@ -42,6 +42,9 @@
 1. Project Structure
 ```
 /udacity_neighborhood_map
+    /css
+        bootstrap.min.css
+        style.css
     /js
         /lib
             knockout-3.2.0.js
