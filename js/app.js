@@ -27,63 +27,61 @@ var initialLocations = [
     }
 ];
 
-var map;
 
-function initMap(locationList) {
+var map, geocoder, infowindow;
+function initMap() {
     var myPlace = {lat: 45.7674959, lng: 21.2171965};
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: myPlace
     });
 
+    geocoder = new google.maps.Geocoder();
 
-    var geocoder = new google.maps.Geocoder();
+    infowindow = new google.maps.InfoWindow({
+        content: ''
+    });
 
-    function codeAddress(location) {
+    ko.applyBindings(new ViewModel());
+}
 
-        geocoder.geocode({'address': location.address()}, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                location.marker = new google.maps.Marker({
-                    position: results[0].geometry.location,
-                    map: map,
-                    animation: google.maps.Animation.DROP
-                });
-                var openInfoFromMap = true;
-                getFoursquareData(location, map, openInfoFromMap);
+function codeAddress(location) {
 
-            } else {
-                alert('Geocode was not successful for the following reason: ' + status);
-            }
-        });
-    }
+    geocoder.geocode({'address': location.address()}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            location.marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+            var openInfoFromMap = true;
+            getFoursquareData(location, openInfoFromMap);
 
-    locationList().forEach(function (locationItem) {
-        codeAddress(locationItem);
+        } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+        }
     });
 }
 
+function googleApiError() {
+    console.log('Google Maps API Error');
+}
 
-function addInfoWindow(location, tips, map) {
+
+function addInfoWindow(location, tips) {
     var infowindow = _setInfoWindow(location, tips);
     location.marker.addListener('click', function () {
         infowindow.open(map, location.marker);
-        bounceOnce(location.marker);
+        location.bounceOnce();
     });
 }
 
-function addInfoWindow1(location, tips, map) {
+function addInfoWindow1(location, tips) {
     var infowindow = _setInfoWindow(location, tips);
     infowindow.open(map, location.marker);
-    bounceOnce(location.marker);
-
+    location.bounceOnce();
 }
 
-function bounceOnce(marker) {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function () {
-        marker.setAnimation(null);
-    }, 750);
-}
 
 function _setInfoWindow(location, tips) {
     var contentString = '<div class="content-marker">' +
@@ -95,9 +93,7 @@ function _setInfoWindow(location, tips) {
 
     contentString += '</ul></div>';
 
-    var infowindow = new google.maps.InfoWindow({
-        content: contentString
-    });
+    infowindow.setContent(contentString);
 
     return infowindow;
 }
@@ -108,7 +104,15 @@ var Location = function (data) {
     this.foursquareId = ko.observable(data.foursquareId);
 };
 
-function getFoursquareData(location, map, openInfoFromMap) {
+Location.prototype.bounceOnce = function () {
+    var marker = this.marker;
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function () {
+        marker.setAnimation(null);
+    }, 700);
+};
+
+function getFoursquareData(location, openInfoFromMap) {
     var oauth_token = 'FSHZRS24QF5WBOSI40TZYLKKXZYUFZXEFPJXRINNJAH25U3N';
 
     $.ajax({
@@ -125,10 +129,13 @@ function getFoursquareData(location, map, openInfoFromMap) {
                 tips.push("No tips! :(");
             }
             if (openInfoFromMap) {
-                addInfoWindow(location, tips, map);
+                addInfoWindow(location, tips);
             } else {
-                addInfoWindow1(location, tips, map);
+                addInfoWindow1(location, tips);
             }
+        })
+        .fail(function () {
+            console.log('There was an error with the Foursquare api!');
         });
 }
 
@@ -136,19 +143,20 @@ function getFoursquareData(location, map, openInfoFromMap) {
 var ViewModel = function () {
     var self = this;
 
-    this.locationsList = ko.observableArray([]);
+    self.locationsList = ko.observableArray([]);
     initialLocations.forEach(function (locationItem) {
         self.locationsList.push(new Location(locationItem));
     });
-    this.openInfoWindow = function (clickedLocation) {
+    self.openInfoWindow = function (clickedLocation) {
         var openInfoFromMap = false;
-        getFoursquareData(clickedLocation, map, openInfoFromMap);
+        getFoursquareData(clickedLocation, openInfoFromMap);
     };
 
-    initMap(this.locationsList);
+    self.locationsList().forEach(function (locationItem) {
+        codeAddress(locationItem);
+    });
 
-
-    this.filter = ko.observable("");
+    self.filter = ko.observable("");
 
     var stringStartsWith = function (string, startsWith) {
         string = string || "";
@@ -157,7 +165,7 @@ var ViewModel = function () {
         return string.substring(0, startsWith.length) === startsWith;
     };
 
-    this.filteredItems = ko.dependentObservable(function () {
+    self.filteredItems = ko.dependentObservable(function () {
         var filter = self.filter().toLowerCase();
         if (!filter) {
             self.locationsList().forEach(function (item) {
@@ -180,4 +188,5 @@ var ViewModel = function () {
     });
 };
 
-ko.applyBindings(new ViewModel());
+
+

@@ -24,7 +24,10 @@
     </div>
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYK1KwHynMzpsJuHwBnk-7MmvwkA6ghSI"></script>
     <script src="js/app.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYK1KwHynMzpsJuHwBnk-7MmvwkA6ghSI&callback=initMap"
+            onerror="googleApiError()"></script>
+
 </body>
 </html>
