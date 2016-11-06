@@ -2,8 +2,9 @@
 --------------
 
     * This is a single page application featuring a map of my neighborhood with locations I would like to visit.
+    Added integration with Foursquare in order to see the tips for the location.
 
-    * Used technologies: Vanilla Javascript and Knockout.js, Google Maps API, Bootstrap
+    * Used technologies: Vanilla Javascript and Knockout.js, Google Maps API, Bootstrap, jquery for ajax call to Foursquare
 
 
 
