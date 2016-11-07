@@ -58,13 +58,13 @@ function codeAddress(location) {
             getFoursquareData(location, openInfoFromMap);
 
         } else {
-            console.log('Geocode was not successful for the following reason: ' + status);
+            alert('Geocode was not successful for the following reason: ' + status);
         }
     });
 }
 
 function googleApiError() {
-    console.log('Google Maps API Error');
+    alert('Google Maps API Error');
 }
 
 
@@ -135,7 +135,7 @@ function getFoursquareData(location, openInfoFromMap) {
             }
         })
         .fail(function () {
-            console.log('There was an error with the Foursquare api!');
+            alert('There was an error with the Foursquare api!');
         });
 }
 
